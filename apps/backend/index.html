@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-black text-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeX — Planetary Crowd Safety Infrastructure</title>
+  <meta name="description" content="SafeX is the real-time operational operating system for mass gatherings. AI crowd surge forecasting, dynamic safe-route guidance, and sub-second geofenced alerts.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            black: '#000000',
+            dark: '#080808',
+            card: '#0D0D0D',
+            border: 'rgba(255, 255, 255, 0.1)',
+            borderStrong: 'rgba(255, 255, 255, 0.25)',
+            muted: '#7A7A7A',
+            accent: '#00F0FF'
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Menlo', 'monospace'],
+          },
+          letterSpacing: {
+            widest: '0.2em',
+            mega: '0.3em'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* SpaceX Minimalist Button */
+    .btn-spacex-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 32px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      background: #FFFFFF;
+      color: #000000;
+      border: 1px solid #FFFFFF;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-spacex-primary:hover {
+      background: transparent;
+      color: #FFFFFF;
+    }
+
+    .btn-spacex-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 32px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      background: transparent;
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-spacex-secondary:hover {
+      border-color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Subtle Technical Grid Lines */
+    .spacex-grid-line {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Custom range slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: rgba(255, 255, 255, 0.15);
+      height: 2px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      background: #FFFFFF;
+      cursor: pointer;
+      border: none;
+    }
+  </style>
+</head>
+<body class="bg-black text-white antialiased">
+
+  <!-- MINIMALIST NAVIGATION (SpaceX Style: Logo, Simple Links, Clean Action) -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-border transition-all">
+    <div class="max-w-[1500px] mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2">
+        <span class="font-extrabold text-xl tracking-[0.2em] uppercase text-white font-sans">
+          SAFEX
+        </span>
+      </a>
+
+      <!-- Clean Navigation Links -->
+      <nav class="hidden md:flex items-center gap-10 text-[11px] font-bold uppercase tracking-widest text-slate-300">
+        <a href="#mission" class="hover:text-white transition-colors">Mission</a>
+        <a href="#platform" class="hover:text-white transition-colors">Platform</a>
+        <a href="#simulator" class="hover:text-white transition-colors">Simulator</a>
+        <a href="#specs" class="hover:text-white transition-colors">Specifications</a>
+        <a href="#pilot" class="hover:text-white transition-colors">Pilot</a>
+      </nav>
+
+      <!-- Language & CTA -->
+      <div class="flex items-center gap-6">
+        <select onchange="changeLang(this.value)" class="bg-transparent text-slate-400 text-xs font-mono uppercase tracking-wider focus:outline-none cursor-pointer hover:text-white">
+          <option value="en" class="bg-black text-white">EN</option>
+          <option value="hi" class="bg-black text-white">HI (हिन्दी)</option>
+          <option value="ar" class="bg-black text-white">AR (العربية)</option>
+          <option value="bn" class="bg-black text-white">BN (বাংলা)</option>
+          <option value="es" class="bg-black text-white">ES (Español)</option>
+          <option value="fr" class="bg-black text-white">FR (Français)</option>
+        </select>
+
+        <a href="#pilot" class="btn-spacex-primary py-2.5 px-5 text-[10px]">
+          Request Pilot
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- HERO SECTION: Ultra-Clean, Monumental, Vast Negative Space -->
+  <section class="relative min-h-screen flex flex-col justify-end pb-24 px-6 sm:px-12 pt-32 overflow-hidden border-b border-border">
+    
+    <!-- Atmospheric Ambient Background Canvas (Clean particle horizon, non-intrusive) -->
+    <div class="absolute inset-0 pointer-events-none z-0">
+      <canvas id="hero-flow-canvas" class="w-full h-full opacity-40"></canvas>
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+    </div>
+
+    <!-- Hero Content (Bottom-Aligned / Classic SpaceX Grandeur) -->
+    <div class="relative z-10 max-w-[1500px] mx-auto w-full">
+      <div class="max-w-4xl">
+        <div class="text-xs font-mono uppercase tracking-[0.25em] text-muted mb-6">
+          Autonomous Crowd Safety Infrastructure
+        </div>
+
+        <h1 class="text-5xl sm:text-7xl lg:text-8xl font-black uppercase tracking-tight text-white leading-[0.95] mb-8 font-sans">
+          Planetary Scale <br/>
+          Crowd Defense.
+        </h1>
+
+        <p class="text-lg sm:text-xl text-slate-300 font-light max-w-2xl leading-relaxed mb-10">
+          When millions converge, physical barriers and megaphones fail. SafeX connects attendees and response commanders with instant spatial routing, sub-second alerts, and AI choke-point prediction.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          <a href="#pilot" class="btn-spacex-primary text-center">
+            Request Operational Pilot
+          </a>
+          <a href="#simulator" class="btn-spacex-secondary text-center">
+            Explore Simulator
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Minimal Bottom Indicator -->
+    <div class="relative z-10 max-w-[1500px] mx-auto w-full mt-16 pt-8 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs font-mono text-muted uppercase tracking-widest">
+      <div>Tested for gatherings of 1,000,000+ concurrent attendees</div>
+      <div class="text-white">Scroll to discover ↓</div>
+    </div>
+  </section>
+
+  <!-- SECTION 1: THE CORE MISSION (SpaceX Full-Bleed Bold Narrative) -->
+  <section id="mission" class="py-32 px-6 sm:px-12 border-b border-border bg-black">
+    <div class="max-w-[1500px] mx-auto">
+      
+      <div class="max-w-4xl">
+        <div class="text-xs font-mono uppercase tracking-widest text-muted mb-4">
+          01 // The Operating Principle
+        </div>
+        
+        <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold uppercase tracking-tight leading-tight text-white mb-8">
+          Crowd disasters are not sudden. <br/>
+          <span class="text-muted">They are invisible until it is too late.</span>
+        </h2>
+
+        <p class="text-base sm:text-lg text-slate-400 font-light leading-relaxed mb-12">
+          At high density, human crowds transition into compressible hydrodynamic fluid. When a single gate locks or panic spreads, localized pressure multiplies exponentially. Conventional radios and announcements carry an 8 to 14 minute delay—long after the window of survival has closed.
+        </p>
+      </div>
+
+      <!-- 3 Spacious Columns (Minimal, Clean, No Busy Boxes) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 pt-12 border-t border-border">
+        
+        <div>
+          <div class="text-sm font-mono text-white mb-3">01 / DENSITY STAGNATION</div>
+          <h3 class="text-xl font-bold uppercase tracking-tight text-white mb-3">Fluid Choke Points</h3>
+          <p class="text-sm text-slate-400 leading-relaxed font-light">
+            Inflow continues into narrow egress corridors while forward velocity drops. Pressure builds silently without human spotters noticing.
+          </p>
+        </div>
+
+        <div>
+          <div class="text-sm font-mono text-white mb-3">02 / TRANSMISSION LAG</div>
+          <h3 class="text-xl font-bold uppercase tracking-tight text-white mb-3">Communication Void</h3>
+          <p class="text-sm text-slate-400 leading-relaxed font-light">
+            Radio chains and hierarchical reporting delay critical diversion orders. By the time instructions are broadcast, pathways are impassable.
+          </p>
+        </div>
+
+        <div>
+          <div class="text-sm font-mono text-white mb-3">03 / LANGUAGE BARRIERS</div>
+          <h3 class="text-xl font-bold uppercase tracking-tight text-white mb-3">Acoustic Saturation</h3>
+          <p class="text-sm text-slate-400 leading-relaxed font-light">
+            Sirens and single-language megaphones are drowned out by ambient noise, causing disorientation among international pilgrims and visitors.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 2: THE PLATFORM ARCHITECTURE (SpaceX Style Clean Split) -->
+  <section id="platform" class="py-32 px-6 sm:px-12 border-b border-border bg-dark">
+    <div class="max-w-[1500px] mx-auto">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div>
+          <div class="text-xs font-mono uppercase tracking-widest text-muted mb-3">
+            02 // Platform Architecture
+          </div>
+          <h2 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+            One Kernel. <br/>Two Perspectives.
+          </h2>
+        </div>
+
+        <!-- Clean Pill Switcher -->
+        <div class="flex items-center border border-border">
+          <button id="tab-command" onclick="togglePlatformView('command')" class="px-6 py-3 text-xs font-bold uppercase tracking-widest bg-white text-black transition-all">
+            Command Center
+          </button>
+          <button id="tab-citizen" onclick="togglePlatformView('citizen')" class="px-6 py-3 text-xs font-bold uppercase tracking-widest text-muted hover:text-white transition-all">
+            Visitor Mobile
+          </button>
+        </div>
+      </div>
+
+      <!-- VIEW 1: COMMAND CENTER (Clean, High-Res, Spacious) -->
+      <div id="view-command" class="border border-border bg-black p-8 sm:p-12">
+        <div class="flex flex-wrap items-center justify-between pb-6 mb-8 border-b border-border text-xs font-mono">
+          <div class="text-white font-bold">OPERATIONS DISPATCH DECK · SECTOR 04</div>
+          <div class="text-emerald-400">● LIVE WEBSOCKET ACTIVE</div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- Tactical Vector Map Screen -->
+          <div class="lg:col-span-8 bg-[#040404] border border-border p-6 h-[400px] flex flex-col justify-between">
+            <div class="flex justify-between text-xs font-mono text-muted">
+              <span>VENUE VECTOR TOPOLOGY</span>
+              <span>GEO-INDEX: POSTGIS</span>
+            </div>
+
+            <!-- Vector Map Lines -->
+            <svg class="w-full h-64 my-auto" viewBox="0 0 500 240">
+              <!-- Sector Polygons -->
+              <polygon points="40,30 180,20 150,110 30,100" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+              <text x="60" y="70" fill="#FFFFFF" font-size="10" font-family="monospace">SECTOR A [NORMAL: 1.2/m²]</text>
+
+              <polygon points="200,25 360,30 330,115 170,110" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+              <text x="220" y="70" fill="#FFFFFF" font-size="10" font-family="monospace">SECTOR B [MONITOR: 2.6/m²]</text>
+
+              <polygon points="50,130 220,125 180,220 30,210" fill="rgba(255,50,50,0.1)" stroke="#FF3333" stroke-width="1.5"/>
+              <text x="60" y="175" fill="#FF3333" font-size="11" font-family="monospace" font-weight="bold">SECTOR C [SURGE CHOKE: 4.8/m²]</text>
+
+              <!-- Safe Egress Corridor -->
+              <path d="M 220 140 Q 320 100, 380 180 T 460 190" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="6,4"/>
+              <text x="320" y="210" fill="#FFFFFF" font-size="10" font-family="monospace">SAFE CORRIDOR GREEN ACTIVE</text>
+            </svg>
+
+            <div class="flex justify-between text-xs font-mono text-slate-400 pt-3 border-t border-border">
+              <span>AI CHOKE DETECTION: 92% DENSITY</span>
+              <span class="text-white">AUTONOMOUS DIVERSION RUNNING</span>
+            </div>
+          </div>
+
+          <!-- Live Feed Side Deck -->
+          <div class="lg:col-span-4 space-y-6">
+            <div class="p-6 border border-border bg-[#040404]">
+              <div class="text-xs font-mono text-muted uppercase mb-1">Total Monitored Scale</div>
+              <div class="text-3xl font-mono font-bold text-white mb-2">342,100</div>
+              <div class="text-xs text-slate-400">Attendees active in venue polygons</div>
+            </div>
+
+            <div class="p-6 border border-border bg-[#040404]">
+              <div class="text-xs font-mono text-muted uppercase mb-1">Egress Clearance Vector</div>
+              <div class="text-3xl font-mono font-bold text-white mb-2">Corridor Green</div>
+              <div class="text-xs text-slate-400">14,200 devices diverted away from Sector C</div>
+            </div>
+
+            <button onclick="alert('Geofence broadcast confirmed across Sector C devices.')" class="w-full btn-spacex-primary py-3">
+              Trigger Geofence Override
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- VIEW 2: VISITOR MOBILE HUD (Clean, Minimalist Phone Layout) -->
+      <div id="view-citizen" class="border border-border bg-black p-8 sm:p-12 hidden">
+        <div class="max-w-md mx-auto border border-border p-8 bg-[#040404]">
+          <div class="flex justify-between items-center pb-4 mb-6 border-b border-border text-xs font-mono">
+            <span class="font-bold text-white tracking-widest">SAFEX CITIZEN</span>
+            <span class="text-emerald-400">● GPS ACTIVE</span>
+          </div>
+
+          <div class="p-4 border border-white/20 bg-white/5 mb-6 space-y-2">
+            <div class="text-[10px] font-mono uppercase text-muted tracking-widest">Emergency Directive</div>
+            <p id="citizen-directive-text" class="text-sm font-medium leading-relaxed text-white">
+              Gate 4 is heavily congested. Turn East and follow Corridor Green to exit safely.
+            </p>
+          </div>
+
+          <div class="h-44 border border-border bg-black p-4 flex flex-col justify-between items-center text-center mb-6">
+            <span class="text-xs font-mono text-muted uppercase">Egress Compass</span>
+            <div class="w-14 h-14 border border-white flex items-center justify-center my-auto rotate-45">
+              <div class="w-2 h-2 bg-white"></div>
+            </div>
+            <span class="text-xs font-mono text-white">BEARING: 084° EAST</span>
+          </div>
+
+          <button onclick="this.innerText='✓ SOS DISPATCHED (ETA 45s)'; this.classList.add('bg-white','text-black');" class="w-full py-4 text-xs font-bold uppercase tracking-widest border border-white text-white hover:bg-white hover:text-black transition-all">
+            Hold Emergency SOS
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 3: CROWD DYNAMICS SIMULATOR (SpaceX Clean Control Center) -->
+  <section id="simulator" class="py-32 px-6 sm:px-12 border-b border-border bg-black">
+    <div class="max-w-[1500px] mx-auto">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div>
+          <div class="text-xs font-mono uppercase tracking-widest text-muted mb-3">
+            03 // Tactical Simulation
+          </div>
+          <h2 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+            Crowd Dynamics Engine.
+          </h2>
+        </div>
+        <p class="text-sm font-mono text-slate-400 max-w-md">
+          Adjust the mass scale from 10,000 to 1,000,000 attendees to observe autonomous egress vectoring in action.
+        </p>
+      </div>
+
+      <!-- Simulator Container -->
+      <div class="border border-border bg-dark p-8 sm:p-12">
+        
+        <!-- Slider Control Bar -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-8 pb-8 mb-8 border-b border-border">
+          <div class="w-full md:max-w-xl space-y-3 font-mono">
+            <div class="flex justify-between items-baseline text-xs uppercase tracking-widest">
+              <span class="text-muted">Attendee Volume:</span>
+              <span id="attendee-display" class="text-2xl font-bold text-white">250,000 PAX</span>
+            </div>
+            
+            <input
+              type="range"
+              min="10000"
+              max="1000000"
+              step="10000"
+              value="250000"
+              oninput="updateCrowdScale(this.value)"
+              class="w-full cursor-pointer"
+            />
+
+            <div class="flex justify-between text-[10px] text-muted tracking-widest">
+              <span>10K (ARENA)</span>
+              <span>250K (FESTIVAL)</span>
+              <span>1M+ (PILGRIMAGE)</span>
+            </div>
+          </div>
+
+          <button onclick="injectGateLock()" class="btn-spacex-secondary py-3 px-6 text-[10px]">
+            Simulate Choke Point Lock
+          </button>
+        </div>
+
+        <!-- Clean Particle Canvas -->
+        <div class="relative bg-black border border-border h-80 mb-8 overflow-hidden">
+          <canvas id="sim-canvas" class="w-full h-full"></canvas>
+          <div class="absolute bottom-4 right-4 text-[10px] font-mono text-muted uppercase">
+            FLOW REGIME: REAL-TIME AUTONOMOUS MITIGATION
+          </div>
+        </div>
+
+        <!-- Telemetry Table (Clean SpaceX Style Specs Grid) -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 pt-4 font-mono text-xs">
+          <div>
+            <div class="text-muted text-[10px] uppercase tracking-widest">Sectors at Risk</div>
+            <div id="sim-risk-val" class="text-2xl font-bold text-white mt-1">02 / 06</div>
+          </div>
+          <div>
+            <div class="text-muted text-[10px] uppercase tracking-widest">Reroute Corridors</div>
+            <div id="sim-reroute-val" class="text-2xl font-bold text-white mt-1">03 Active</div>
+          </div>
+          <div>
+            <div class="text-muted text-[10px] uppercase tracking-widest">Packet Fanout</div>
+            <div id="sim-fanout-val" class="text-2xl font-bold text-white mt-1">18,400 /s</div>
+          </div>
+          <div>
+            <div class="text-muted text-[10px] uppercase tracking-widest">Mitigation Time</div>
+            <div id="sim-time-val" class="text-2xl font-bold text-white mt-1">~85s</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 4: SPECIFICATIONS TABLE (SpaceX Falcon 9 / Dragon Specs Style) -->
+  <section id="specs" class="py-32 px-6 sm:px-12 border-b border-border bg-dark">
+    <div class="max-w-[1500px] mx-auto">
+      
+      <div class="max-w-2xl mb-16">
+        <div class="text-xs font-mono uppercase tracking-widest text-muted mb-3">
+          04 // System Specifications
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white mb-4">
+          Engineered for Consequence.
+        </h2>
+        <p class="text-sm font-mono text-slate-400">
+          Core platform parameters and architectural guarantees.
+        </p>
+      </div>
+
+      <!-- Clean 2-Column Specs Grid (Like SpaceX Starship specs) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 border-t border-border">
+        
+        <div class="divide-y divide-border">
+          <div class="py-5 flex justify-between items-baseline font-mono text-xs">
+            <span class="text-slate-400 uppercase tracking-wider">THROUGHPUT CAPACITY</span>
+            <span class="text-white font-bold text-sm">1,000,000+ CONCURRENT PAX</span>
+          </div>
+          <div class="py-5 flex justify-between items-baseline font-mono text-xs">
+            <span class="text-slate-400 uppercase tracking-wider">ALERT BROADCAST LATENCY</span>
+            <span class="text-white font-bold text-sm">&lt; 280 MILLISECONDS</span>
+          </div>
+          <div class="py-5 flex justify-between items-baseline font-mono text-xs">
+            <span class="text-slate-400 uppercase tracking-wider">SUPPORTED LOCALIZATIONS</span>
+            <span class="text-white font-bold text-sm">7 CRITICAL DIALECTS (RTL + INDIC)</span>
+          </div>
+          <div class="py-5 flex justify-between items-baseline font-mono text-xs">
+            <span class="text-slate-400 uppercase tracking-wider">AI RISK FORECAST WINDOW</span>
+            <span class="text-white font-bold text-sm">+30 MINUTES LEAD TIME</span>
+          </div>
+        </div>
+
+        <div class="divide-y divide-border">
+          <div class="py-5 flex justify-between items-baseline font-mono text-xs">
+            <span class="text-slate-400 uppercase tracking-wider">GATEWAY RUNTIME</span>
+            <span class="text-white font-bold text-sm">NODE.JS 20.X + TYPESCRIPT</span>
+          </div>
+          <div class="py-5 flex justify-between items-baseline font-mono text-xs">
+            <span class="text-slate-400 uppercase tracking-wider">NEURAL VISION PIPELINE</span>
+            <span class="text-white font-bold text-sm">PYTHON 3.11 + FASTAPI + PYTORCH</span>
+          </div>
+          <div class="py-5 flex justify-between items-baseline font-mono text-xs">
+            <span class="text-slate-400 uppercase tracking-wider">SPATIAL INDEXING CLUSTER</span>
+            <span class="text-white font-bold text-sm">POSTGRESQL + POSTGIS 3.3</span>
+          </div>
+          <div class="py-5 flex justify-between items-baseline font-mono text-xs">
+            <span class="text-slate-400 uppercase tracking-wider">DATA RETENTION</span>
+            <span class="text-white font-bold text-sm">0.00 BYTES (EPHEMERAL RAM DENSITY)</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 5: PILOT INTAKE (SpaceX Minimalist Contact Form) -->
+  <section id="pilot" class="py-32 px-6 sm:px-12 border-b border-border bg-black">
+    <div class="max-w-[900px] mx-auto">
+      
+      <div class="text-center mb-16">
+        <div class="text-xs font-mono uppercase tracking-widest text-muted mb-3">
+          05 // Deployment
+        </div>
+        <h2 class="text-4xl sm:text-6xl font-black uppercase tracking-tight text-white mb-4">
+          Deploy SafeX.
+        </h2>
+        <p class="text-sm font-mono text-slate-400 max-w-md mx-auto">
+          For municipal agencies, police departments, stadium authorities, and religious trust boards.
+        </p>
+      </div>
+
+      <!-- Minimalist Clean Form -->
+      <form onsubmit="handlePilotSubmit(event)" class="space-y-8 font-mono text-xs">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div>
+            <label class="block uppercase text-muted tracking-wider mb-2">OFFICER / COMMANDER NAME *</label>
+            <input required type="text" placeholder="Commander Name" class="w-full bg-black border-b border-border py-3 text-white focus:outline-none focus:border-white transition-colors">
+          </div>
+          <div>
+            <label class="block uppercase text-muted tracking-wider mb-2">AGENCY / ORGANIZATION *</label>
+            <input required type="text" placeholder="Police Department / Trust / Stadium" class="w-full bg-black border-b border-border py-3 text-white focus:outline-none focus:border-white transition-colors">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div>
+            <label class="block uppercase text-muted tracking-wider mb-2">OFFICIAL EMAIL *</label>
+            <input required type="email" placeholder="commander@agency.gov" class="w-full bg-black border-b border-border py-3 text-white focus:outline-none focus:border-white transition-colors">
+          </div>
+          <div>
+            <label class="block uppercase text-muted tracking-wider mb-2">ESTIMATED ATTENDANCE *</label>
+            <select class="w-full bg-black border-b border-border py-3 text-white focus:outline-none focus:border-white cursor-pointer">
+              <option>25,000 – 100,000 (ARENA / STADIUM)</option>
+              <option>100,000 – 300,000 (REGIONAL FESTIVAL)</option>
+              <option>300,000 – 1,000,000 (CONVOCATION)</option>
+              <option>1,000,000+ (PLANETARY PILGRIMAGE)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block uppercase text-muted tracking-wider mb-2">OPERATIONAL SCOPE & CHOKE POINTS *</label>
+          <textarea required rows="3" placeholder="Venue geometry, upcoming gathering dates, egress bottlenecks..." class="w-full bg-black border-b border-border py-3 text-white focus:outline-none focus:border-white transition-colors"></textarea>
+        </div>
+
+        <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <span class="text-xs text-muted">// DIRECT ENGINEERING DISPATCH · CONFIDENTIAL</span>
+          <button type="submit" class="btn-spacex-primary w-full sm:w-auto">
+            Submit Pilot Inquiry
+          </button>
+        </div>
+
+      </form>
+
+      <div id="submit-success" class="hidden mt-8 p-4 border border-white text-white font-mono text-xs text-center uppercase tracking-widest">
+        ✓ INQUIRY RECEIVED. REFERENCE: SFX-PILOT-8820. DISPATCH LIAISON RESPONDING WITHIN 4 HOURS.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SPACEX STYLE FOOTER -->
+  <footer class="py-12 px-6 sm:px-12 bg-black text-[11px] font-mono uppercase tracking-widest text-muted">
+    <div class="max-w-[1500px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-6">
+        <span class="text-white font-bold">SAFEX</span>
+        <span>© 2026 SAFEX DEFENSE</span>
+        <span>// APACHE-2.0</span>
+      </div>
+
+      <div class="flex items-center gap-8 text-slate-400">
+        <a href="https://github.com/Insohamdas/SafeX" target="_blank" class="hover:text-white transition-colors">GITHUB</a>
+        <a href="#mission" class="hover:text-white transition-colors">MISSION</a>
+        <a href="#specs" class="hover:text-white transition-colors">SPECS</a>
+        <a href="#pilot" class="hover:text-white transition-colors">PILOT</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MINIMAL SCRIPT ENGINE -->
+  <script>
+    // Multilingual Directives
+    const DIRECTIVES = {
+      en: "Gate 4 is heavily congested. Turn East and follow Corridor Green to exit safely.",
+      hi: "गेट 4 अत्यधिक भीड़भाड़ वाला है। सुरक्षित बाहर निकलने के लिए पूर्व की ओर मुड़ें और ग्रीन कॉरिडोर का पालन करें।",
+      ar: "البوابة 4 مزدحمة للغاية. استدر شرقاً واتبع الممر الأخضر للخروج بأمان.",
+      bn: "গেট ৪ অত্যন্ত জনাকীর্ণ। নিরাপদে বের হওয়ার জন্য পূর্ব দিকে ঘুরে করিডোর গ্রিন অনুসরণ করুন।",
+      es: "La Puerta 4 está congestionada. Gire al Este y siga el Corredor Verde para salir con seguridad.",
+      fr: "La Porte 4 est encombrée. Tournez vers l'Est et suivez le Couloir Vert pour évacuer en sécurité."
+    };
+
+    function changeLang(code) {
+      const el = document.getElementById('citizen-directive-text');
+      if (el && DIRECTIVES[code]) {
+        el.innerText = DIRECTIVES[code];
+        el.dir = (code === 'ar') ? 'rtl' : 'ltr';
+      }
+    }
+
+    function togglePlatformView(view) {
+      const cmd = document.getElementById('view-command');
+      const cit = document.getElementById('view-citizen');
+      const btnCmd = document.getElementById('tab-command');
+      const btnCit = document.getElementById('tab-citizen');
+
+      if (view === 'command') {
+        cmd.classList.remove('hidden');
+        cit.classList.add('hidden');
+        btnCmd.className = 'px-6 py-3 text-xs font-bold uppercase tracking-widest bg-white text-black transition-all';
+        btnCit.className = 'px-6 py-3 text-xs font-bold uppercase tracking-widest text-muted hover:text-white transition-all';
+      } else {
+        cmd.classList.add('hidden');
+        cit.classList.remove('hidden');
+        btnCit.className = 'px-6 py-3 text-xs font-bold uppercase tracking-widest bg-white text-black transition-all';
+        btnCmd.className = 'px-6 py-3 text-xs font-bold uppercase tracking-widest text-muted hover:text-white transition-all';
+      }
+    }
+
+    function updateCrowdScale(val) {
+      const num = Number(val);
+      document.getElementById('attendee-display').innerText = num.toLocaleString() + ' PAX';
+      const ratio = num / 1000000;
+      
+      const risk = Math.min(6, Math.max(1, Math.floor(ratio * 6)));
+      document.getElementById('sim-risk-val').innerText = `0${risk} / 06`;
+      document.getElementById('sim-reroute-val').innerText = `0${Math.max(1, Math.floor(risk * 1.5))} Active`;
+      document.getElementById('sim-fanout-val').innerText = `${Math.round(ratio * 75000 + 4000).toLocaleString()} /s`;
+      document.getElementById('sim-time-val').innerText = `~${Math.max(30, Math.round(160 - risk * 20))}s`;
+    }
+
+    function injectGateLock() {
+      alert('Choke point locked in Sector C. Egress diverged to Corridor Green.');
+      document.getElementById('sim-risk-val').innerText = '05 / 06';
+      document.getElementById('sim-reroute-val').innerText = '05 Active';
+    }
+
+    function handlePilotSubmit(e) {
+      e.preventDefault();
+      document.getElementById('submit-success').classList.remove('hidden');
+    }
+
+    // Hero Atmospheric Flow Canvas (Clean, Minimal, Dark)
+    (function() {
+      const canvas = document.getElementById('hero-flow-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = window.innerWidth;
+      let h = canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', () => {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      });
+
+      const particles = Array.from({ length: 90 }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        speed: 0.3 + Math.random() * 0.5,
+        size: Math.random() * 1.5 + 0.8
+      }));
+
+      function render() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillRect(0, 0, w, h);
+
+        particles.forEach(p => {
+          p.x += p.speed;
+          if (p.x > w) p.x = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.fill();
+        });
+
+        requestAnimationFrame(render);
+      }
+      render();
+    })();
+
+    // Simulator Canvas (Clean Navier-Stokes Flow)
+    (function() {
+      const canvas = document.getElementById('sim-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = canvas.parentElement.clientWidth;
+      let h = canvas.height = 320;
+
+      const dots = Array.from({ length: 120 }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: (Math.random() - 0.5) * 1.2
+      }));
+
+      function render() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+        ctx.fillRect(0, 0, w, h);
+
+        dots.forEach(d => {
+          d.x += d.vx;
+          d.y += d.vy;
+
+          if (d.x < 0) d.x = w;
+          if (d.x > w) d.x = 0;
+          if (d.y < 0) d.y = h;
+          if (d.y > h) d.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, 1.4, 0, Math.PI * 2);
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fill();
+        });
+
+        requestAnimationFrame(render);
+      }
+      render();
+    })();
+  </script>
+</body>
+</html>
