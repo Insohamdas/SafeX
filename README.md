@@ -197,5 +197,16 @@ npm run android   # or npm run ios
 
 ---
 
+## 🌐 Live Landing Page & Interactive Demo
+
+SafeX includes an interactive, zero-config web landing page and interactive simulation sandbox (`index.html`) ready for 1-click deployment to **Vercel**:
+* **Visitor Mobile Simulation**: Test real-time multilingual alerts, dynamic safe-route toggles, and instant SOS beacon triggers.
+* **Authority Command Portal**: Inspect live sector density grids, AI anomaly detection alerts, and transmit simulated geofenced polygon broadcasts.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FInsohamdas%2FSafeX)
+
+---
+
 ## 📄 License
 This project is licensed under the Apache-2.0 License.
+

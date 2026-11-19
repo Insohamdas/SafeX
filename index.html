@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeX | AI-Powered Real-Time Crowd Safety Platform</title>
+  <meta name="description" content="SafeX connects visitors and authorities through real-time multilingual alerts, safe-route guidance, instant SOS, and AI-driven crowd risk analysis.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+            },
+            danger: {
+              500: '#ef4444',
+              600: '#dc2626',
+            },
+            safe: {
+              500: '#10b981',
+              600: '#059669',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'radar': 'radar 2s ease-out infinite',
+          },
+          keyframes: {
+            radar: {
+              '0%': { transform: 'scale(0.8)', opacity: '0.9' },
+              '100%': { transform: 'scale(2.2)', opacity: '0' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #030712;
+      color: #f3f4f6;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glow-blue {
+      box-shadow: 0 0 50px -10px rgba(59, 130, 246, 0.3);
+    }
+    .glow-red {
+      box-shadow: 0 0 50px -10px rgba(239, 68, 68, 0.35);
+    }
+    .grid-pattern {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-blue-600 selection:text-white relative overflow-x-hidden">
+
+  <!-- Ambient Background Accents -->
+  <div class="fixed inset-0 grid-pattern pointer-events-none opacity-40 z-0"></div>
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-blue-600/15 blur-[120px] rounded-full pointer-events-none z-0"></div>
+  <div class="fixed bottom-0 right-10 w-[500px] h-[300px] bg-indigo-600/10 blur-[140px] rounded-full pointer-events-none z-0"></div>
+
+  <!-- Navigation Bar -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 p-[1px] flex items-center justify-center">
+          <div class="w-full h-full bg-slate-950 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-blue-400 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+        </div>
+        <div>
+          <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-200 to-blue-400 bg-clip-text text-transparent">SafeX</span>
+          <span class="ml-1 text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">v1.0</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
+        <a href="#features" class="hover:text-blue-400 transition-colors">Key Features</a>
+        <a href="#demo" class="hover:text-blue-400 transition-colors">Interactive Demo</a>
+        <a href="#architecture" class="hover:text-blue-400 transition-colors">Architecture</a>
+        <a href="#tech-stack" class="hover:text-blue-400 transition-colors">Tech Stack</a>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/Insohamdas/SafeX" target="_blank" rel="noopener" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-slate-200 transition-all">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+
+        <a href="#demo" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02]">
+          <span>Launch Demo</span>
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      
+      <!-- Live Status Pill -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-700/80 text-xs font-medium text-slate-300 mb-8 shadow-inner">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="text-slate-300">Intelligent Crowd Surge & Crisis Management System</span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-5xl mx-auto leading-[1.1] mb-6">
+        Real-Time Crowd Safety <br class="hidden sm:inline" />
+        <span class="bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">Powered by AI Telemetry</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed mb-10 font-normal">
+        SafeX unifies event visitors and response authorities through instantaneous geofenced multilingual alerts, dynamic congestion-evasion navigation, emergency SOS, and proactive computer vision density forecasting.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto mb-16">
+        <a href="#demo" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-xl shadow-blue-600/30 transition-all hover:scale-105">
+          <span>Test Interactive Demo</span>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+          </svg>
+        </a>
+        <a href="#architecture" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-200 transition-all">
+          <span>System Specs</span>
+          <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Live Telemetry KPI Counter Strip -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md">
+          <div class="text-2xl sm:text-3xl font-extrabold text-white mb-1 font-mono">&lt; 350ms</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Alert Latency</div>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md">
+          <div class="text-2xl sm:text-3xl font-extrabold text-blue-400 mb-1 font-mono">5+ Langs</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Auto-Translation</div>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md">
+          <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mb-1 font-mono">99.4%</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Surge Prediction</div>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md">
+          <div class="text-2xl sm:text-3xl font-extrabold text-indigo-400 mb-1 font-mono">1-Tap</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">SOS Triage Response</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Interactive Sandbox Demo Section -->
+  <section id="demo" class="py-20 bg-slate-900/40 border-y border-slate-800/80 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold mb-3">
+          <span>Hands-On Simulation</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+          Experience the SafeX Core Workflow
+        </h2>
+        <p class="text-slate-400 text-sm sm:text-base">
+          Toggle between the <strong>Visitor Mobile App</strong> and the <strong>Authority Command Portal</strong> to simulate live alerts, safe routing, and emergency triage.
+        </p>
+
+        <!-- Role Toggle Tabs -->
+        <div class="inline-flex p-1.5 mt-8 rounded-xl bg-slate-950 border border-slate-800 shadow-xl">
+          <button id="tab-visitor" onclick="switchRole('visitor')" class="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-blue-600 text-white shadow-md">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            </svg>
+            <span>Visitor Mobile View</span>
+          </button>
+          <button id="tab-authority" onclick="switchRole('authority')" class="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
+            </svg>
+            <span>Authority Command Center</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Demo Viewport Container -->
+      <div class="max-w-5xl mx-auto">
+        
+        <!-- VISITOR MODE SIMULATOR -->
+        <div id="view-visitor" class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          
+          <!-- Left: Mobile Device Frame -->
+          <div class="md:col-span-6 flex justify-center">
+            <div class="w-full max-w-[340px] rounded-[40px] p-3 bg-slate-900 border-4 border-slate-700 shadow-2xl relative glow-blue">
+              <!-- Phone Notch -->
+              <div class="w-32 h-4 bg-slate-800 rounded-b-xl mx-auto mb-3"></div>
+
+              <!-- Phone Screen Content -->
+              <div class="bg-slate-950 rounded-[30px] p-4 text-xs flex flex-col gap-3 min-h-[520px]">
+                
+                <!-- Screen Header -->
+                <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="font-bold text-white text-sm">SafeX Mobile</span>
+                  </div>
+                  <span class="text-[10px] text-slate-400 font-mono" id="sim-clock">12:30 PM</span>
+                </div>
+
+                <!-- Live Urgent Alert Banner -->
+                <div id="visitor-alert-box" class="p-3 rounded-xl bg-red-950/60 border border-red-500/50 text-red-200">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold flex items-center gap-1 text-[11px] text-red-400">
+                      <svg class="w-3.5 h-3.5 animate-bounce" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                      URGENT CONGESTION ALERT
+                    </span>
+                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-300">Zone B</span>
+                  </div>
+                  <p id="visitor-alert-text" class="text-[11px] leading-tight text-slate-300">
+                    High crowd surge detected at Sector 4 Gate. Please use Corridor Green for exit.
+                  </p>
+                </div>
+
+                <!-- Interactive Simulated Radar Map -->
+                <div class="relative h-44 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col justify-between p-3">
+                  <div class="text-[10px] text-slate-400 flex justify-between items-center z-10">
+                    <span class="font-semibold text-white">Live Safe-Route View</span>
+                    <span id="route-status-badge" class="px-1.5 py-0.5 rounded text-[9px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Safe Path Active</span>
+                  </div>
+
+                  <!-- Simulated Path Graphic -->
+                  <div class="relative w-full h-24 flex items-center justify-center my-auto">
+                    <!-- Congested Hotspot (Red Zone) -->
+                    <div class="absolute right-6 top-2 w-16 h-16 rounded-full bg-red-600/20 border border-red-500/40 flex items-center justify-center">
+                      <div class="w-6 h-6 rounded-full bg-red-500/50 animate-ping"></div>
+                      <span class="text-[8px] font-bold text-red-400 absolute">DANGER</span>
+                    </div>
+
+                    <!-- User Location Dot -->
+                    <div class="absolute left-6 bottom-2 w-4 h-4 rounded-full bg-blue-500 ring-4 ring-blue-500/30 flex items-center justify-center">
+                      <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+                    </div>
+
+                    <!-- Dynamic Navigation Line -->
+                    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 200 100">
+                      <path id="route-path" d="M 30 75 Q 80 80, 120 30 T 170 20" fill="none" stroke="#10b981" stroke-width="4" stroke-dasharray="6,4" class="animate-pulse" />
+                    </svg>
+                  </div>
+
+                  <button onclick="toggleRoute()" class="w-full py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-medium transition-colors z-10 flex items-center justify-center gap-1.5">
+                    <svg class="w-3 h-3 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    <span>Recalculate Route (Simulate Obstacle)</span>
+                  </button>
+                </div>
+
+                <!-- Emergency SOS Trigger Area -->
+                <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 flex flex-col items-center text-center gap-2">
+                  <div class="text-[11px] font-bold text-white">Emergency SOS Beacon</div>
+                  <p class="text-[9px] text-slate-400">Broadcasts your live GPS coordinates to all on-ground patrol teams.</p>
+                  
+                  <button id="sos-btn" onclick="triggerSOS()" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-black text-sm uppercase tracking-wider shadow-lg shadow-red-600/40 transition-all active:scale-95 flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    <span>Trigger Instant SOS</span>
+                  </button>
+                  <div id="sos-feedback" class="text-[10px] text-emerald-400 font-mono hidden">
+                    ✓ SOS Active: Dispatch Team Beta En Route (ETA 90s)
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Interactive Controls & Explanations -->
+          <div class="md:col-span-6 space-y-6">
+            <div class="p-6 rounded-2xl bg-slate-900/80 border border-slate-800">
+              <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                <span>Multilingual Real-Time Alerts</span>
+              </h3>
+              <p class="text-sm text-slate-400 mb-4">
+                In multi-cultural gatherings and international events, instructions must be crystal clear. Choose a language to see the visitor's mobile alert translate in real-time:
+              </p>
+
+              <!-- Language Selectors -->
+              <div class="flex flex-wrap gap-2 mb-4">
+                <button onclick="setAlertLanguage('en')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-500 transition-colors lang-btn">English</button>
+                <button onclick="setAlertLanguage('es')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors lang-btn">Español</button>
+                <button onclick="setAlertLanguage('hi')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors lang-btn">हिन्दी</button>
+                <button onclick="setAlertLanguage('fr')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors lang-btn">Français</button>
+                <button onclick="setAlertLanguage('ar')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors lang-btn">العربية</button>
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-300">
+                <span class="text-slate-500">// Broadcast Payload</span><br>
+                <span class="text-emerald-400">"target_zone"</span>: <span class="text-amber-300">"Sector 4 (North Gate)"</span>,<br>
+                <span class="text-emerald-400">"risk_index"</span>: <span class="text-red-400">0.88</span>,<br>
+                <span class="text-emerald-400">"suggested_action"</span>: <span class="text-blue-300">"DYNAMIC_SAFE_CORRIDOR_GREEN"</span>
+              </div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-slate-900/80 border border-slate-800">
+              <h3 class="text-xl font-bold text-white mb-2">Simulate Citizen Hazard Report</h3>
+              <p class="text-sm text-slate-400 mb-4">
+                Attendees can submit crowd density alerts or medical notices directly from the venue:
+              </p>
+              <div class="flex gap-2">
+                <input id="incident-input" type="text" placeholder="e.g. Broken gate at Stairs C, flow blocked" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+                <button onclick="submitCitizenReport()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition-all">Submit</button>
+              </div>
+              <div id="report-toast" class="mt-2 text-xs text-emerald-400 hidden">
+                ✓ Report submitted and dispatched to Authority triage queue!
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- AUTHORITY MODE SIMULATOR -->
+        <div id="view-authority" class="hidden space-y-6">
+          
+          <!-- Top Grid: Live Sector Density Matrix -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <!-- Sector 1 -->
+            <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800">
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-bold text-sm text-white">Sector 1 (Main Entrance)</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">NORMAL</span>
+              </div>
+              <div class="flex items-baseline gap-2 mb-2">
+                <span class="text-3xl font-extrabold text-white font-mono">38%</span>
+                <span class="text-xs text-slate-400">Capacity</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-full rounded-full" style="width: 38%"></div>
+              </div>
+              <div class="mt-3 text-[11px] text-slate-400 flex justify-between">
+                <span>Flow: 1.2 m/s</span>
+                <span>Camera 01: Active</span>
+              </div>
+            </div>
+
+            <!-- Sector 2 -->
+            <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800">
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-bold text-sm text-white">Sector 2 (Central Plaza)</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">MONITOR</span>
+              </div>
+              <div class="flex items-baseline gap-2 mb-2">
+                <span class="text-3xl font-extrabold text-amber-400 font-mono">68%</span>
+                <span class="text-xs text-slate-400">Capacity</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-500 h-full rounded-full" style="width: 68%"></div>
+              </div>
+              <div class="mt-3 text-[11px] text-slate-400 flex justify-between">
+                <span>Flow: 0.6 m/s</span>
+                <span>Camera 04: Active</span>
+              </div>
+            </div>
+
+            <!-- Sector 4 (Critical) -->
+            <div class="p-5 rounded-2xl bg-slate-900 border border-red-500/50 glow-red">
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-bold text-sm text-red-200">Sector 4 (North Gate)</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/30 animate-pulse">SURGE ALERT</span>
+              </div>
+              <div class="flex items-baseline gap-2 mb-2">
+                <span class="text-3xl font-extrabold text-red-400 font-mono">92%</span>
+                <span class="text-xs text-slate-400">CRITICAL CONGESTION</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-red-500 h-full rounded-full animate-pulse" style="width: 92%"></div>
+              </div>
+              <div class="mt-3 text-[11px] text-red-300 flex justify-between font-medium">
+                <span>Bottleneck Imminent</span>
+                <span>AI Action: Divert Flow</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Command Dashboard Bottom Deck -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left: Geofence Alert Broadcast Console -->
+            <div class="lg:col-span-7 p-6 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="font-bold text-white text-base">Geofenced Alert Broadcast Console</h3>
+                  <span class="text-xs font-mono text-blue-400">POSTGIS_POLYGON_ACTIVE</span>
+                </div>
+
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Target Geofence Sector</label>
+                    <select id="broadcast-zone" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                      <option value="Sector 4 (North Gate)">Sector 4 (North Gate) [High Congestion]</option>
+                      <option value="Sector 2 (Central Plaza)">Sector 2 (Central Plaza) [Moderate]</option>
+                      <option value="All Sectors">Broadcast All Venue Sectors</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Broadcast Directive Message</label>
+                    <textarea id="broadcast-msg" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-slate-200 focus:outline-none focus:border-blue-500" placeholder="Type alert directive here..."></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-800">
+                <span class="text-xs text-slate-400">Estimated Reach: <strong class="text-white">~4,850 devices</strong></span>
+                <button onclick="dispatchAuthorityBroadcast()" class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-lg shadow-blue-600/30">
+                  Transmit Live Broadcast
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Real-time Incident & Triage Queue -->
+            <div class="lg:col-span-5 p-6 rounded-2xl bg-slate-900 border border-slate-800">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-white text-base">Active Triage Feed</h3>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/20 text-blue-400">3 Live</span>
+              </div>
+
+              <div id="triage-feed" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+                <div class="p-3 rounded-xl bg-slate-950 border border-red-500/30 flex items-start justify-between">
+                  <div>
+                    <div class="flex items-center gap-1.5 mb-0.5">
+                      <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                      <span class="font-bold text-xs text-white">SOS Beacon #109</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">Lat: 28.6139, Long: 77.2090 • Unit 4 Dispatched</p>
+                  </div>
+                  <span class="text-[10px] text-red-400 font-mono font-bold">ACTIVE</span>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start justify-between">
+                  <div>
+                    <div class="flex items-center gap-1.5 mb-0.5">
+                      <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                      <span class="font-bold text-xs text-white">Bottleneck Detected</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">AI Model Vision #02: Flow rate drop below 0.3 m/s</p>
+                  </div>
+                  <span class="text-[10px] text-amber-400 font-mono font-bold">WARNING</span>
+                </div>
+
+                <div id="dynamic-report-item" class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start justify-between">
+                  <div>
+                    <div class="flex items-center gap-1.5 mb-0.5">
+                      <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                      <span class="font-bold text-xs text-white">Citizen Report #042</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">Overcrowded escalator near Gate 3</p>
+                  </div>
+                  <span class="text-[10px] text-blue-400 font-mono font-bold">QUEUED</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Key Architecture & Microservices Section -->
+  <section id="architecture" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+          Engineered for Extreme Reliability Under Load
+        </h2>
+        <p class="text-slate-400 text-sm sm:text-base">
+          SafeX uses a modern decoupled architecture where high-throughput mobile telemetry, spatial indexing, and heavy neural inference execute in dedicated micro-services.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Mobile App -->
+        <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-blue-500/50 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-4">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="font-bold text-white text-lg mb-2">React Native Mobile</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Lightweight, low-battery geofence polling, offline cache for venue egress maps, and immediate hardware SOS vibration/haptic triggers.
+          </p>
+        </div>
+
+        <!-- Node.js Core -->
+        <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-blue-500/50 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="font-bold text-white text-lg mb-2">Node.js & WebSockets</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            High-throughput event loop for 100k+ concurrent connected devices. Powered by Redis Pub/Sub for sub-second localized emergency fanout.
+          </p>
+        </div>
+
+        <!-- FastAPI AI Engine -->
+        <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-blue-500/50 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mb-4">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="font-bold text-white text-lg mb-2">FastAPI AI Engine</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Asynchronous Python API executing PyTorch & OpenCV crowd counting pipelines, surge velocity analysis, and bottleneck detection.
+          </p>
+        </div>
+
+        <!-- PostGIS & Spatial DB -->
+        <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-blue-500/50 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-4">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+          </div>
+          <h3 class="font-bold text-white text-lg mb-2">PostgreSQL + PostGIS</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Spatial indexing enabling rapid polygon intersection queries: immediately identifies every attendee currently within a hazard zone.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Tech Stack Grid -->
+  <section id="tech-stack" class="py-16 bg-slate-900/30 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <h3 class="text-2xl font-bold text-white mb-2">Core Technology Ecosystem</h3>
+        <p class="text-xs sm:text-sm text-slate-400">Battle-tested tools engineered for low-latency emergency environments.</p>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <span class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">React Native</span>
+        <span class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">TypeScript</span>
+        <span class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">Node.js</span>
+        <span class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">FastAPI</span>
+        <span class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">Python 3.11</span>
+        <span class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">PyTorch & OpenCV</span>
+        <span class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">PostgreSQL / PostGIS</span>
+        <span class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">Redis Pub/Sub</span>
+        <span class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">Docker Compose</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deploy Call-To-Action Banner -->
+  <section class="py-20 relative overflow-hidden">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="rounded-3xl p-8 sm:p-12 bg-gradient-to-tr from-blue-950/70 via-slate-900 to-indigo-950/70 border border-blue-500/30 text-center relative glow-blue">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+          Ready to Deploy to Vercel?
+        </h2>
+        <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-8">
+          This landing page and interactive simulator is structured for immediate zero-config deployment on Vercel. Import the repository directly or push with the Vercel CLI to get your production URL in seconds.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FInsohamdas%2FSafeX" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold bg-white text-slate-950 hover:bg-slate-100 transition-all shadow-xl hover:scale-105">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 22.525H0l12-21.05 12 21.05z"/></svg>
+            <span>Deploy to Vercel</span>
+          </a>
+
+          <a href="https://github.com/Insohamdas/SafeX" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-all">
+            <span>Explore Source Code</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-10 border-t border-slate-800 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 font-bold text-slate-300">
+        <span>SafeX</span>
+        <span>•</span>
+        <span class="font-normal text-slate-500">Autonomous Crowd Safety & Crisis Mitigation Platform</span>
+      </div>
+      <div>
+        <span>Open Source Under Apache-2.0 License</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Simulation JavaScript Logic -->
+  <script>
+    // Live Clock Simulation
+    function updateSimClock() {
+      const now = new Date();
+      const clockEl = document.getElementById('sim-clock');
+      if (clockEl) {
+        clockEl.innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+    }
+    setInterval(updateSimClock, 1000);
+    updateSimClock();
+
+    // Switch Role Tabs (Visitor vs Authority)
+    function switchRole(role) {
+      const visitorView = document.getElementById('view-visitor');
+      const authorityView = document.getElementById('view-authority');
+      const tabVisitor = document.getElementById('tab-visitor');
+      const tabAuthority = document.getElementById('tab-authority');
+
+      if (role === 'visitor') {
+        visitorView.classList.remove('hidden');
+        authorityView.classList.add('hidden');
+        tabVisitor.className = 'flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-blue-600 text-white shadow-md';
+        tabAuthority.className = 'flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white';
+      } else {
+        visitorView.classList.add('hidden');
+        authorityView.classList.remove('hidden');
+        tabAuthority.className = 'flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-blue-600 text-white shadow-md';
+        tabVisitor.className = 'flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white';
+      }
+    }
+
+    // Multilingual Alert Simulation
+    const translations = {
+      en: "High crowd surge detected at Sector 4 Gate. Please use Corridor Green for exit.",
+      es: "Se detectó gran aglomeración en la Puerta del Sector 4. Utilice el Corredor Verde para salir.",
+      hi: "सेक्टर 4 गेट पर भारी भीड़ दर्ज की गई। कृपया निकास के लिए ग्रीन कॉरिडोर का उपयोग करें।",
+      fr: "Forte affluence détectée à la porte du secteur 4. Veuillez emprunter le couloir vert pour sortir.",
+      ar: "تم رصد تدفق حشود كثيف عند بوابة القطاع 4. يرجى استخدام الممر الأخضر للخروج."
+    };
+
+    function setAlertLanguage(lang) {
+      const alertText = document.getElementById('visitor-alert-text');
+      if (alertText && translations[lang]) {
+        alertText.style.opacity = '0.3';
+        setTimeout(() => {
+          alertText.innerText = translations[lang];
+          alertText.style.opacity = '1';
+        }, 150);
+      }
+      // Update button styling
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-600', 'text-white');
+        btn.classList.add('bg-slate-800', 'text-slate-300');
+      });
+      event.target.classList.remove('bg-slate-800', 'text-slate-300');
+      event.target.classList.add('bg-blue-600', 'text-white');
+    }
+
+    // Dynamic Route Recalculation Simulation
+    let isAlternativeRoute = false;
+    function toggleRoute() {
+      const routePath = document.getElementById('route-path');
+      const badge = document.getElementById('route-status-badge');
+      isAlternativeRoute = !isAlternativeRoute;
+
+      if (isAlternativeRoute) {
+        routePath.setAttribute('d', 'M 30 75 Q 70 20, 110 50 T 170 85');
+        routePath.setAttribute('stroke', '#38bdf8');
+        badge.innerText = 'Corridor Green Route';
+        badge.className = 'px-1.5 py-0.5 rounded text-[9px] font-mono bg-sky-500/20 text-sky-400 border border-sky-500/30';
+      } else {
+        routePath.setAttribute('d', 'M 30 75 Q 80 80, 120 30 T 170 20');
+        routePath.setAttribute('stroke', '#10b981');
+        badge.innerText = 'Safe Path Active';
+        badge.className = 'px-1.5 py-0.5 rounded text-[9px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+      }
+    }
+
+    // SOS Trigger Simulation
+    let sosTriggered = false;
+    function triggerSOS() {
+      const sosBtn = document.getElementById('sos-btn');
+      const feedback = document.getElementById('sos-feedback');
+
+      if (!sosTriggered) {
+        sosTriggered = true;
+        sosBtn.classList.remove('from-red-600', 'to-rose-600');
+        sosBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
+        sosBtn.innerHTML = '<span>✓ SOS TRANSMITTED</span>';
+        feedback.classList.remove('hidden');
+      } else {
+        sosTriggered = false;
+        sosBtn.classList.add('from-red-600', 'to-rose-600');
+        sosBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-500');
+        sosBtn.innerHTML = '<svg class="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg><span>Trigger Instant SOS</span>';
+        feedback.classList.add('hidden');
+      }
+    }
+
+    // Citizen Incident Report Simulation
+    function submitCitizenReport() {
+      const input = document.getElementById('incident-input');
+      const toast = document.getElementById('report-toast');
+      const triageFeed = document.getElementById('triage-feed');
+
+      if (!input.value.trim()) return;
+
+      const reportText = input.value.trim();
+      input.value = '';
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3500);
+
+      // Append to authority feed
+      if (triageFeed) {
+        const newItem = document.createElement('div');
+        newItem.className = 'p-3 rounded-xl bg-slate-950 border border-blue-500/40 flex items-start justify-between animate-pulse';
+        newItem.innerHTML = `
+          <div>
+            <div class="flex items-center gap-1.5 mb-0.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+              <span class="font-bold text-xs text-white">Citizen Report #New</span>
+            </div>
+            <p class="text-[11px] text-slate-300">${reportText}</p>
+          </div>
+          <span class="text-[10px] text-blue-400 font-mono font-bold">DISPATCHED</span>
+        `;
+        triageFeed.prepend(newItem);
+      }
+    }
+
+    // Authority Broadcast Transmit
+    function dispatchAuthorityBroadcast() {
+      const zone = document.getElementById('broadcast-zone').value;
+      const msg = document.getElementById('broadcast-msg').value || 'Evacuation advisory in effect.';
+      
+      const visitorAlertBox = document.getElementById('visitor-alert-box');
+      const visitorAlertText = document.getElementById('visitor-alert-text');
+
+      if (visitorAlertText) {
+        visitorAlertText.innerText = `[${zone}] ${msg}`;
+      }
+      
+      alert(`Broadcast transmitted to ${zone} via WebSockets! Switch to the Visitor Mobile view to verify.`);
+      switchRole('visitor');
+    }
+  </script>
+</body>
+</html>
