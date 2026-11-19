@@ -31,3 +31,7 @@ apps/mobile/ios/build/
 .vscode/
 .idea/
 .DS_Store
+
+# Prompts & local notes
+safex-landing-page-prompt.md
+

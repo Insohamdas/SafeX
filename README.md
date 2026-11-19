@@ -1,8 +1,18 @@
 # SafeX: Real-Time Crowd Safety & Crisis Management Platform
 
+[![Node.js](https://img.shields.io/badge/Node.js-Primary_Core_Engine-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Full_Stack-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React Native](https://img.shields.io/badge/React_Native-Mobile_Apps-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactnative.dev/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-AI_Microservice-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+
 SafeX is an intelligent, role-based crowd safety ecosystem engineered to bridge the communication and situational awareness gap between event visitors and response authorities during large gatherings, religious congregations, festivals, transit hubs, and sports events.
 
-By combining real-time geo-targeted communication, computer vision crowd analysis, and dynamic navigation, SafeX prevents crowd surges, manages emergency responses, and keeps citizens safe.
+> ### 🟢 Core Engine: Node.js & TypeScript Ecosystem
+> **Node.js serves as the primary backbone of the SafeX platform**, powering:
+> * **High-Concurrency Real-Time Gateway (`apps/backend`)**: Built with **Node.js** and TypeScript to handle sub-second WebSocket broadcasting, emergency SOS triage, and spatial alert distribution for thousands of concurrent connections.
+> * **Mobile Applications (`apps/mobile`)**: React Native cross-platform visitor and authority app running on the **Node.js** tooling ecosystem.
+> * **Command & Control Portal (`apps/web-dashboard`)**: Operations dashboard built with React + Vite powered by **Node.js**.
+> *(Python / FastAPI is leveraged as a specialized auxiliary microservice exclusively for deep learning computer vision and crowd density inference).*
 
 ---
 
@@ -115,16 +125,16 @@ SafeX/
 
 ---
 
-## 💻 Tech Stack
+## 💻 Tech Stack Overview
 
-| Domain | Technology |
-|---|---|
-| **Mobile Application** | React Native, TypeScript, React Navigation, Geolocation API |
-| **Web Dashboard** | React, TypeScript, Vite, Interactive GIS Map Component |
-| **Core API & Realtime** | Node.js, Express, TypeScript, Socket.io |
-| **AI & Predictive Analytics** | Python 3.11, FastAPI, PyTorch, OpenCV, NumPy |
-| **Spatial Database & Cache** | PostgreSQL with PostGIS extension, Redis |
-| **Containerization** | Docker, Docker Compose |
+| Domain | Primary Technology | Ecosystem Role |
+|---|---|---|
+| **Core API & Real-Time Engine** | **Node.js (v20+), Express, Socket.io, TypeScript** | **Central Hub**: High-throughput event loop for 100k+ concurrent connections, SOS dispatch, and spatial routing |
+| **Mobile Application** | **React Native (Node.js ecosystem), TypeScript** | Cross-platform citizen and field unit mobile client |
+| **Authority Command Center** | **React, Vite (Node.js toolchain), TypeScript** | Interactive operational GIS monitoring portal |
+| **AI Computer Vision** | Python 3.11, FastAPI, PyTorch, OpenCV | Auxiliary microservice for camera feed crowd density inference |
+| **Spatial Database & Cache** | PostgreSQL + PostGIS, Redis Pub/Sub | High-speed geofence matching & distributed session caching |
+| **Orchestration** | Docker, Docker Compose | Unified container orchestration for all services |
 
 ---
 
