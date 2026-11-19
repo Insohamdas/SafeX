@@ -1,0 +1,10 @@
+{
+  "name": "@safex/backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "ts-node-dev src/app.ts"
+  }
+}
